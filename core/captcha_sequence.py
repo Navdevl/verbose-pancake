@@ -1,18 +1,13 @@
 import random
-import string
 import numpy as np
 from tensorflow.keras.utils import Sequence
 from captcha.image import ImageCaptcha
 from core.ds_creator import DSCreator
 
-# Globals
-characters = string.digits
-n_len = 6
-n_class = len(characters)
-
 
 class CaptchaSequence(Sequence):
     def __init__(self, characters, batch_size, steps, n_len=6, width=135, height=35, save_image=False):
+        print("Initializing the CaptchaSequence.")
         self.characters = characters
         self.batch_size = batch_size
         self.steps = steps
@@ -34,7 +29,7 @@ class CaptchaSequence(Sequence):
             random_str = ''.join([random.choice(self.characters) for j in range(self.n_len)])
             generated_img = self.ds_creator.create_image(random_str)
             if self.save_image:
-                generated_img.save('demo_imgs/{0}.png'.format(random_str))
+                generated_img.save('training_data/{0}.png'.format(random_str))
             X[i] = np.array(generated_img) / 255.0
             for j, ch in enumerate(random_str):
                 y[j][i, :] = 0
