@@ -19,9 +19,9 @@ class Trainer(object):
         self.height = height
         self.width = width
         self.input_tensor = Input((height, width, 3))
-        self.train_data = CaptchaSequence(characters, batch_size=64, steps=10)
+        self.train_data = CaptchaSequence(characters, batch_size=128, steps=1000)
         self.valid_data = self.load_from_files(dir='test_data')
-        self.epochs = 1
+        self.epochs = 15
         self.create_model()
 
     def decode(self, y):
