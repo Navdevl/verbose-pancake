@@ -21,7 +21,7 @@ class Trainer(object):
         self.input_tensor = Input((height, width, 3))
         self.train_data = CaptchaSequence(characters, batch_size=128, steps=1000)
         self.valid_data = self.load_from_files(dir='test_data')
-        self.epochs = 15
+        self.epochs = 50
         self.create_model()
 
     def decode(self, y):
@@ -42,7 +42,7 @@ class Trainer(object):
         im_np = np.array(im) / 255.0
         im_np = im_np.reshape((1, self.height, self.width, 3))
         print(filename.split('/')[-1].split('.')[0])
-        return (im_np, filename.split('.')[0])
+        return (im_np, filename.split('/')[-1].split('.')[0])
 
     def create_model(self):
         for i, n_cnn in enumerate([2, 2, 2, 2, 2]):
@@ -73,6 +73,7 @@ class Trainer(object):
             callbacks=callbacks)
 
     def execute(self):
+        self.train(optimizer_value=1e-3)
         self.train(optimizer_value=1e-4)
         self.train(optimizer_value=1e-5)
         self.save()
