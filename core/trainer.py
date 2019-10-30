@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 import numpy as np
-import os
-import glob
-from PIL import Image
 from core.captcha_sequence import CaptchaSequence
+from core.image_sequence import ImageSequence
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Conv2D, Dense, BatchNormalization, Activation, MaxPooling2D, Flatten, Input
 from tensorflow.keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
@@ -20,30 +18,13 @@ class Trainer(object):
         self.width = width
         self.input_tensor = Input((height, width, 3))
         self.train_data = CaptchaSequence(characters, batch_size=128, steps=1000)
-        self.valid_data = self.load_from_files(dir='test_data')
+        self.valid_data = ImageSequence(dir='test_data', characters=characters, width=width, height=height)
         self.epochs = 50
         self.create_model()
 
     def decode(self, y):
         y = np.argmax(np.array(y), axis=2)[:, 0]
         return ''.join([self.characters[x] for x in y])
-
-    def load_from_files(self, dir):
-        print("Load from files..")
-        test_data = []
-        filelist = glob.glob(os.path.join(dir, "*.png"))
-        print(filelist)
-        for file in filelist:
-            test_data.append(self.load_from_file(file))
-        return test_data
-
-    def load_from_file(self, filename):
-        im = Image.open(filename).convert('RGB')
-        im = im.resize((self.width, self.height))
-        im_np = np.array(im) / 255.0
-        im_np = im_np.reshape((1, self.height, self.width, 3))
-        print(filename.split('/')[-1].split('.')[0])
-        return (im_np, filename.split('/')[-1].split('.')[0])
 
     def create_model(self):
         for i, n_cnn in enumerate([2, 2, 2, 2, 2]):
