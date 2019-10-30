@@ -19,7 +19,7 @@ class Trainer(object):
         self.input_tensor = Input((height, width, 3))
         self.train_data = CaptchaSequence(characters, batch_size=64, steps=1000)
         self.valid_data = ImageSequence(dir='test_data', characters=characters, width=width, height=height)
-        self.epochs = 50
+        self.epochs = 20
         self.create_model()
 
     def decode(self, y):
