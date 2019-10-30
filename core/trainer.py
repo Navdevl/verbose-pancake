@@ -35,6 +35,7 @@ class Trainer(object):
         print(filelist)
         for file in filelist:
             test_data.append(self.load_from_file(file))
+        return test_data
 
     def load_from_file(self, filename):
         im = Image.open(filename).convert('RGB')
