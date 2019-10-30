@@ -13,6 +13,7 @@ class ImageSequence(Sequence):
         self.width = width
         self.dir = dir
         self.n_len = 6
+        self.batch_size = 10
         self.n_class = len(characters)
         self.height = height
         self.generator = ImageCaptcha(width=width, height=height, font_sizes=[30])
@@ -25,9 +26,9 @@ class ImageSequence(Sequence):
 
     def __getitem__(self, idx):
         data = self.load_from_files(dir=self.dir)
-        X = np.zeros((len(data), self.height, self.width, 3), dtype=np.float32)
-        y = [np.zeros((len(data), self.n_class), dtype=np.uint8) for i in range(self.n_len)]
-        for i in range(len(data)):
+        X = np.zeros((self.batch_size, self.height, self.width, 3), dtype=np.float32)
+        y = [np.zeros((self.batch_size, self.n_class), dtype=np.uint8) for i in range(self.n_len)]
+        for i in range(self.batch_size):
             X[i] = data[i][0]
             for j, ch in enumerate(data[i][1]):
                 y[j][i, :] = 0
